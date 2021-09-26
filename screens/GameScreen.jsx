@@ -27,15 +27,14 @@ export default function GameScreen() {
     } else {
       // Time has expired
       // TODO: update appropriate state variables
+      // getNextRound()
       setViewed(viewed + 1)
-      getNextRound()
     }
   };
 
   // This is used in the useEffect(...) hook bound on a specific STATE variable.
   // It updates state to present a new member & name options.
   const getNextRound = () => {
-    console.log(">>>>>> NEXT ROUND");
     // Fetches the next member name to guess.
     let correct = names[Math.floor(Math.random() * names.length)];
     let correctName = nameToPic[correct][0];
@@ -55,38 +54,35 @@ export default function GameScreen() {
     // TODO: Update state here.
     setNameOptions(nameOptions);
     setCorrectI(nameOptions.indexOf(correctName));
-    setTimeLeft(5000);
-
     setImage(correctImage);
+
+    setTimeLeft(5000);
   };
 
   // Called when user taps a name option.
   // TODO: Update correct # and total # state values.
   const selectedNameChoice = (index) => {
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>> SELECTED NAME");
     if(index == correct_i) {
       setCorrect(correct + 1);
     }    
     setViewed(viewed + 1);
-    getNextRound();
+    // getNextRound();
   };
 
   useEffect(() => {
     /* TODO: Call the countDown() method every 10 milliseconds */
-    timeoutId = setTimeout(() => {
+    const timerID = setInterval(() => {
       countDown();
-    }, 10);
-    console.log("Setting timeout, id=" + timeoutId);
-    
-    // return ()=>{clearInterval(interval);};
-  }, [timeLeft]);
+    }, 10); 
+    return () => clearInterval(timerID);
+  });
 
   // TODO: Finish this useEffect() hook such that we automatically
   // get the next round when the appropriate state variable changes.
 
   useEffect(() => {
     getNextRound();
-  }, []);
+  }, [viewed]);
 
   // Set up four name button components
   const nameButtons = [];
